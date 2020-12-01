@@ -11,6 +11,23 @@ object ParseFooDb {
   val h_weigth = 1.007276
 
 
+  val nsfoodb : Map[String,NameSpace.InternalNamespaceManagement] = Map(
+    "moldb_iupac" -> NameSpace.p2m2("iupac"),
+    "moldb_inchi" -> NameSpace.p2m2("inchi"),
+    "moldb_inchikey" -> NameSpace.p2m2("inchikey"),
+    "name" -> NameSpace.p2m2("label"),
+    "moldb_mono_mass" -> NameSpace.p2m2("weight"),
+    "moldb_smiles" -> NameSpace.p2m2("smiles"),
+    "cas_number" -> NameSpace.p2m2("cas_number"),
+    "state" -> NameSpace.p2m2("state"),
+    "annotation_quality" -> NameSpace.p2m2("annot_quality"),
+    "klass" ->  NameSpace.p2m2("class"),
+    "subklass" ->  NameSpace.p2m2("subclass"),
+    "superklass" ->  NameSpace.p2m2("superclass"),
+    "kingdom" ->  NameSpace.p2m2("kingdom"),
+    "description" ->  NameSpace.p2m2("comment"),
+  )
+
   /**
    * Main treatment
    * @param args
@@ -47,7 +64,7 @@ object ParseFooDb {
 
           val obj2 : Map[String,String]= obj.map( { case (key,value)  => {
             try {
-              val s = NameSpace.nsfoodb(key)
+              val s = nsfoodb(key)
               s.property -> s.transform(value.asInstanceOf[String])
             } catch {
               case _ : Throwable => "null" -> "null"

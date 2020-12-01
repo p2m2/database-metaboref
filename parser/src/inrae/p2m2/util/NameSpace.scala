@@ -104,22 +104,6 @@ object NameSpace {
       BuildTurtle.datatypeproperty( (ns_property_p2m2 + "mass_minush") , "[M-H+]" , compound, "xsd:double") ),
   )
 
-  val nsfoodb : Map[String,InternalNamespaceManagement] = Map(
-    "moldb_iupac" -> p2m2("iupac"),
-    "moldb_inchi" -> p2m2("inchi"),
-    "moldb_inchikey" -> p2m2("inchikey"),
-    "name" -> p2m2("label"),
-    "moldb_mono_mass" -> p2m2("weight"),
-    "moldb_smiles" -> p2m2("smiles"),
-    "cas_number" -> p2m2("cas_number"),
-    "state" -> p2m2("state"),
-    "annotation_quality" -> p2m2("annot_quality"),
-    "klass" ->  p2m2("class"),
-    "subklass" ->  p2m2("subclass"),
-    "superklass" ->  p2m2("superclass"),
-    "kingdom" ->  p2m2("kingdom"),
-    "description" ->  p2m2("comment"),
-  )
 
   def foodb( uri : String ) : String = ns_food + uri
 }
