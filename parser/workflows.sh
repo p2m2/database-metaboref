@@ -31,6 +31,7 @@ if [[ "$download_html" =~ $re ]]; then
           pathcompoundjson=$(find . -name "Compound.json")
           echo " -- transform $pathcompoundjson -- "
           sbt "foodb/run $pathcompoundjson $ttldir/foodb${release}.ttl"
+          ttl $ttldir/foodb${release}.ttl
         popd
 else
 	echo " -- Can not find json to download at https://foodb.ca/downloads -- "

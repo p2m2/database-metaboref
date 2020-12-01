@@ -7,8 +7,11 @@ lazy val root = (project in file("."))
     libraryDependencies += "org.apache.commons" % "commons-text" % "1.9"
   )
 
+lazy val util = project.in(file("./src/inrae/p2m2/util"))
+                .dependsOn(root)
+
 lazy val foodb = project.in(file("./src/inrae/p2m2/app/foodb"))
               .settings(
                 name := "foodb"
               )
-              .dependsOn(root)
+              .dependsOn(util)
