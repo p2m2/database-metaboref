@@ -8,6 +8,9 @@ object TtlFileWriter {
    * @param bw
    */
   def write_header( bw : BufferedWriter ) : Unit = {
+
+    bw.write ("@base <"+NameSpace.ns_all(":")+"> .\n")
+
     NameSpace.ns_all.keys.map( k => {
       NameSpace.ns_all.get(k) match {
         case Some(r) => bw.write ("@prefix "+ k + " <"+ r +"> .\n")
@@ -27,11 +30,9 @@ object TtlFileWriter {
 
     obj.get("uri") match {
       case Some(uri) => {
-        bw.write(uri + " a " + NameSpace.compound + " ;\n")
-        bw.write( "   " + NameSpace.ns_property_p2m2+"db_source " + FormatUtil.toXsdString("FOODB")  +  "  ;\n")
-        bw.write(obj.keys.filter(_ != "uri").map(k => {
+        bw.write(uri + obj.keys.filter(_ != "uri").map(k => {
           obj.get(k) match {
-            case Some(v) => if (v != FormatUtil.toXsdString("null")) {
+            case Some(v) => if (v != FormatUtil.toXsdString("null") && v!= "null") {
               "  " + k + " " + v
             } else { "null" }
             case _ => throw new Error("Object with key:" + k + "can not be empty")

@@ -2,6 +2,7 @@ package inrae.p2m2.util
 
 object NameSpace {
 
+  val ns_inst_p2m2 = "peak0:"
   val ns_class_p2m2 = "peak1:"
   val ns_property_p2m2 = "peak2:"
   val ns_category_p2m2 = "peak3:"
@@ -10,98 +11,108 @@ object NameSpace {
 
   val compound = ns_class_p2m2+"Compound"
 
-  case class InternalNamespaceManagement(val property : String,
-                                         val transform : (String => String),
-                                         val propertyTypeDef : String )
-
   val ns_all = Map(
     ns_food -> "https://foodb.ca/compounds/",
+    ns_inst_p2m2       -> "https://metabohub.p2m2.org/ontology/instance/",
     ns_class_p2m2       -> "https://metabohub.p2m2.org/ontology/class/",
     ns_property_p2m2    -> "https://metabohub.p2m2.org/ontology/property/",
     ns_category_p2m2    -> "https://metabohub.p2m2.org/ontology/category/",
     "askomics:" -> "http://askomics.org/internal/" ,
     "owl:" -> "http://www.w3.org/2002/07/owl#",
     "rdfs:" -> "http://www.w3.org/2000/01/rdf-schema#",
-    "xsd:" -> "http://www.w3.org/2001/XMLSchema#"
+    "xsd:" -> "http://www.w3.org/2001/XMLSchema#",
+    "dct:" -> "http://purl.org/dc/terms/",
+    "dcat:" -> "http://www.w3.org/ns/dcat#",
+    "dctype:" -> "http://purl.org/dc/dcmitype/",
+    "foaf:" -> "http://xmlns.com/foaf/0.1/",
+    "skos:" -> "http://www.w3.org/2004/02/skos/core#",
+    "vcard:" -> "http://www.w3.org/2006/vcard/ns#",
+    ":" -> "https://metabohub.p2m2.org/"
   )
+
   /**
    * Key property => 1. uri property
-   *                 2. transform value ( xsd:string, xsd:Double, category )
+   *                 2. transform value ( xsd:string, xsd:double, category )
    *                 3. datatype or objectproperty
    *///
-  val p2m2 : Map[String,InternalNamespaceManagement] = Map(
-    "iupac" -> InternalNamespaceManagement( (ns_property_p2m2 + "iupac_name"), ( FormatUtil.toXsdString(_) )    ,
+  val p2m2 : Map[String,NameSpaceManagement] = Map(
+    "iupac" -> NameSpaceManagement( (ns_property_p2m2 + "iupac_name"), ( FormatUtil.toXsdString(_) )    ,
          (BuildTurtle.datatypeproperty( (ns_property_p2m2 + "iupac_name") , "iupac" , compound, "xsd:string")) ),
 
-    "inchi" -> InternalNamespaceManagement( (ns_property_p2m2 +"InChI"),
+    "inchi" -> NameSpaceManagement( (ns_property_p2m2 +"InChI"),
           (FormatUtil.toXsdString(_) ),
       BuildTurtle.datatypeproperty( (ns_property_p2m2 + "InChI") , "InChi" , compound, "xsd:string") ),
 
-    "inchikey" -> InternalNamespaceManagement( (ns_property_p2m2 +"InChIKey"),
+    "inchikey" -> NameSpaceManagement( (ns_property_p2m2 +"InChIKey"),
           FormatUtil.toXsdString(_) ,
           BuildTurtle.datatypeproperty( (ns_property_p2m2 + "InChIKey") , "InChIKey" , compound, "xsd:string") ),
 
-    "label" -> InternalNamespaceManagement("rdfs:label", FormatUtil.toXsdString(_) , "" ),
-    "altlabel" -> InternalNamespaceManagement("rdfs:altlabel" , FormatUtil.toXsdString(_) ,"" ),
-    "weight" -> InternalNamespaceManagement( (ns_property_p2m2 +"exact_mass") ,
+    "label" -> NameSpaceManagement("rdfs:label", FormatUtil.toXsdString(_) , "" ),
+    "altlabel" -> NameSpaceManagement("rdfs:altlabel" , FormatUtil.toXsdString(_) ,"" ),
+    "weight" -> NameSpaceManagement( (ns_property_p2m2 +"exact_mass") ,
                    FormatUtil.toXsdDouble(_) ,
                    BuildTurtle.datatypeproperty( (ns_property_p2m2 + "exact_mass") , "Exact Mass" , compound, "xsd:double") ),
-    "smiles" -> InternalNamespaceManagement( (ns_property_p2m2 +"can_smiles")  ,
+    "smiles" -> NameSpaceManagement( (ns_property_p2m2 +"can_smiles")  ,
                    FormatUtil.toXsdString(_) ,
                     BuildTurtle.datatypeproperty( (ns_property_p2m2 + "can_smiles") , "Smiles" , compound, "xsd:string") ),
 
-    "cas_number" -> InternalNamespaceManagement( (ns_property_p2m2 +"cas_number") ,
+    "cas_number" -> NameSpaceManagement( (ns_property_p2m2 +"cas_number") ,
                     FormatUtil.toXsdString(_) ,
                     BuildTurtle.datatypeproperty( (ns_property_p2m2 + "cas_number") , "Cas Number" , compound, "xsd:string") ),
 
-    "state" -> InternalNamespaceManagement( (ns_property_p2m2 +"state") ,
+    "state" -> NameSpaceManagement( (ns_property_p2m2 +"state") ,
                     FormatUtil.toXsdString(_) ,
                   BuildTurtle.datatypeproperty( (ns_property_p2m2 + "state") , "State" , compound, "xsd:string") ),
 
-    "annot_quality" -> InternalNamespaceManagement( (ns_property_p2m2 +"annotation_quality") ,
+    "annot_quality" -> NameSpaceManagement( (ns_property_p2m2 +"annotation_quality") ,
          ( (s : String) => BuildTurtle.manage_category("annot_quality",s)) ,
       BuildTurtle.objectproperty( (ns_property_p2m2 + "annotation_quality") ,
                                    "Annotation Quality" ,
                                     compound,ns_category_p2m2+"annotation_qualityCategory") ),
 
-    "class" -> InternalNamespaceManagement( (ns_property_p2m2 +"class")  ,
+    "class" -> NameSpaceManagement( (ns_property_p2m2 +"class")  ,
             (value => BuildTurtle.manage_category("class",value)) ,
       BuildTurtle.objectproperty( (ns_property_p2m2 + "class") ,
         "Class" ,
         compound,ns_category_p2m2+"classCategory") ),
 
-    "subclass" -> InternalNamespaceManagement( (ns_property_p2m2 +"subclass")  ,
+    "subclass" -> NameSpaceManagement( (ns_property_p2m2 +"subclass")  ,
              (value => BuildTurtle.manage_category("subclass",value)) ,
       BuildTurtle.objectproperty( (ns_property_p2m2 + "subclass") ,
                 "SubClass" ,
                 compound,ns_category_p2m2+"subclassCategory") ),
 
-    "superclass" -> InternalNamespaceManagement( (ns_property_p2m2 +"superclass")  ,
+    "superclass" -> NameSpaceManagement( (ns_property_p2m2 +"superclass")  ,
              (value => BuildTurtle.manage_category("superclass",value)) ,
       BuildTurtle.objectproperty( (ns_property_p2m2 + "superclass") ,
         "SuperClass" ,
         compound,ns_category_p2m2+"superclassCategory") ),
 
-    "kingdom" -> InternalNamespaceManagement( (ns_property_p2m2 +"kingdom")  ,
+    "kingdom" -> NameSpaceManagement( (ns_property_p2m2 +"kingdom")  ,
              (value => BuildTurtle.manage_category("kingdom",value)) ,
       BuildTurtle.objectproperty( (ns_property_p2m2 + "kingdom") ,
         "Kingdom" ,
         compound,ns_category_p2m2+"kingdomCategory") ),
 
-    "comment" -> InternalNamespaceManagement("rdfs:comment",
+    "comment" -> NameSpaceManagement("rdfs:comment",
              (FormatUtil.toXsdString(_)),""),
 
-    "db_source" -> InternalNamespaceManagement( (ns_property_p2m2 +"source") ,
+    "db_source" -> NameSpaceManagement( (ns_property_p2m2 +"source") ,
               FormatUtil.toXsdString(_) ,
             BuildTurtle.datatypeproperty( (ns_property_p2m2 + "source") , "Database" , compound, "xsd:string") ),
 
-    "mass_plush" -> InternalNamespaceManagement( (ns_property_p2m2 +"mass_plush"),
+    "mass_plush" -> NameSpaceManagement( (ns_property_p2m2 +"mass_plush"),
               FormatUtil.toXsdDouble(_)  ,
-      BuildTurtle.datatypeproperty( (ns_property_p2m2 + "mass_plush") , "[M+H+]" , compound, "xsd:double") ),
+      BuildTurtle.datatypeproperty( (ns_property_p2m2 + "mass_plush") , "[M+H+]/z" , compound, "xsd:double") ),
 
-    "mass_minush" -> InternalNamespaceManagement( (ns_property_p2m2 +"mass_minush"),
+    "mass_minush" -> NameSpaceManagement( (ns_property_p2m2 +"mass_minush"),
               FormatUtil.toXsdDouble(_)  ,
-      BuildTurtle.datatypeproperty( (ns_property_p2m2 + "mass_minush") , "[M-H+]" , compound, "xsd:double") ),
+      BuildTurtle.datatypeproperty( (ns_property_p2m2 + "mass_minush") , "[M-H+]/z" , compound, "xsd:double") ),
+
+    "formula" -> NameSpaceManagement( (ns_property_p2m2 + "formula"), ( FormatUtil.toXsdString(_) )    ,
+      (BuildTurtle.datatypeproperty( (ns_property_p2m2 + "formula") , "formula" , compound, "xsd:string")) ),
+
+
   )
 
 

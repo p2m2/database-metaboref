@@ -8,10 +8,8 @@ import inrae.p2m2.util._
 // source file Hello.scala
 object ParseFooDb {
   val ns_foodb = "foodb:"
-  val h_weigth = 1.007276
 
-
-  val nsfoodb : Map[String,NameSpace.InternalNamespaceManagement] = Map(
+  val nsfoodb : Map[String,NameSpaceManagement] = Map(
     "moldb_iupac" -> NameSpace.p2m2("iupac"),
     "moldb_inchi" -> NameSpace.p2m2("inchi"),
     "moldb_inchikey" -> NameSpace.p2m2("inchikey"),
@@ -76,7 +74,7 @@ object ParseFooDb {
             obj.get("moldb_mono_mass") match {
               case Some(v) => try {
                 val s = NameSpace.p2m2("mass_plush")
-                val mass = (v.asInstanceOf[String].toDouble+h_weigth).toString
+                val mass = (v.asInstanceOf[String].toDouble+Const.h_weigth).toString
                 s.property -> s.transform(mass)
               } catch {
                 case _ : Throwable  =>  {
@@ -90,7 +88,7 @@ object ParseFooDb {
             obj.get("moldb_mono_mass") match {
               case Some(v) =>  try {
                 val s = NameSpace.p2m2("mass_minush")
-                val mass = (v.asInstanceOf[String].toDouble-h_weigth).toString
+                val mass = (v.asInstanceOf[String].toDouble-Const.h_weigth).toString
                 s.property -> s.transform(mass)
               }  catch {
                 case _ : Throwable => {
@@ -106,6 +104,10 @@ object ParseFooDb {
                 "uri" -> (NameSpace.foodb(v.asInstanceOf[String]))
               case _ => "null" -> "null"
             }
+          } + {
+            NameSpace.p2m2("db_source").property -> NameSpace.p2m2("db_source").transform("FooDB")
+          } + {
+            "a" -> NameSpace.compound
           }
 
           TtlFileWriter.write_turtle(bw,obj2)
