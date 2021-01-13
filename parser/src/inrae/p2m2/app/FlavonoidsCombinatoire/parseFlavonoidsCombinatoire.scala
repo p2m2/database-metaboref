@@ -56,7 +56,7 @@ object FlavonoidsCombinatoire {
                              parseDouble(cells(4)) &&    //float/double
                              parseDouble(cells(5)))      //float/double
            .foreach ( cells => {
-             print("line:"+cells(0)); //cells.map( println(_) )
+             //print("line:"+cells(0)); //cells.map( println(_) )
              val label = NameSpace.p2m2("label")
              val formula = NameSpace.p2m2("formula")
 

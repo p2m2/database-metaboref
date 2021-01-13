@@ -1,7 +1,7 @@
 package inrae.p2m2.util
 
 object FormatUtil {
-  val string_sep="\""
+  val string_sep="\"\"\""
 
   def toXsdString(value : String) : String =
     string_sep + org.apache.commons.text.StringEscapeUtils.unescapeJava(value) + string_sep

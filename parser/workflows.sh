@@ -7,8 +7,11 @@ then
 fi
 
 ttldir=$PWD"/dumps"
+
 echo "Create dumps directory"
 mkdir -p $ttldir
+
+workdir=$(mktemp -d)
 
 ### 1. FOODB
 
@@ -20,7 +23,7 @@ if [[ "$download_html" =~ $re ]]; then
         echo " -- Download foodb $url -- "
 	      curl -s https://foodb.ca/$url -o down.zip
         echo " -- unzip -- "
-	      unzip down.zip
+	      unzip down.zip -d $workdir
         release=""
 	      rerelease="([0-9][0-9_]+)_json.zip"
 	      if [[ "$url" =~ $rerelease  ]]; then
@@ -28,7 +31,7 @@ if [[ "$download_html" =~ $re ]]; then
 	      fi
 
         pushd $(dirname $0)
-          pathcompoundjson=$(find . -name "Compound.json")
+          pathcompoundjson=$(find $workdir -name "Compound.json")
           echo " -- transform $pathcompoundjson -- "
           sbt "foodb/run $pathcompoundjson $ttldir/foodb${release}.ttl"
           ttl $ttldir/foodb${release}.ttl
@@ -38,7 +41,8 @@ else
         exit 1
 fi
 
-### 2.
-
-
-
+### 2. FlavonoidsCombinatoire
+pushd $(dirname $0)
+sbt "flavonoids/run resources/FlavonoidsCombinatoire-Updatenov2018.xlsx $ttldir/flavonoids_combinatoire.ttl"
+ttl $ttldir/flavonoids_combinatoire.ttl
+popd
