@@ -2,8 +2,8 @@
 
 basedir="./dumps"
 
-function db() {
-   
+function load_databases() {
+
   if [ ! -d "$basedir" ] ; then
     echo "$basedir does not exist."
     mkdir -p "$basedir"
@@ -16,8 +16,8 @@ function db() {
 }
 
 function foodb() {
-   
-  nameg=$(pushd $basedir;ls foodb*;popd)
+  pushd $basedir
+  nameg=$(ls foodb*)
   nameg=$(basename $nameg)
 
   echo " -- Loading $nameg"
@@ -28,9 +28,9 @@ function foodb() {
           isql-v 1111 dba "${PASSWORD}" exec="${ISQLV_CMD}"
 
   echo " -- Foodb Loaded."
+  popd
 }
 
 function newdb() {
    echo " -- new db --"
 }
-

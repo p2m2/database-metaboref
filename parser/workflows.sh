@@ -18,9 +18,9 @@ download_html=$(curl -s https://foodb.ca/downloads)
 if [[ "$download_html" =~ $re ]]; then
         url=${BASH_REMATCH[1]}
         echo " -- Download foodb $url -- "
-	      #curl -s https://foodb.ca/$url -o down.zip
+	      curl -s https://foodb.ca/$url -o down.zip
         echo " -- unzip -- "
-	      #unzip down.zip
+	      unzip down.zip
         release=""
 	      rerelease="([0-9][0-9_]+)_json.zip"
 	      if [[ "$url" =~ $rerelease  ]]; then

@@ -3,6 +3,7 @@
 source $(dirname $0)/db.sh
 
 #set -o xtrace
+
 # CMD           what to do (start | stop | clean)
 # LISTEN_PORT   Port to listen
 # ---- ENDPOINT      type of endpoint
@@ -18,10 +19,10 @@ then
 fi
 
 CMD=$1
-COMPOSE_PROJECT_NAME="compareDB"
+COMPOSE_PROJECT_NAME="P2M2_RCA_Databases"
 LISTEN_PORT="8089"
 PASSWORD="pass123"
-GRAPH="http://p2m2#"
+GRAPH="http://p2m2.metabohub.org/"
 ALLOW_UDPATE="true"
 
 function waitStarted() {
@@ -100,8 +101,8 @@ EOF
 
                 waitStarted
                 echo " -- Container started."
-                
-		db
+                load_databases
+                echo " -- Databases loaded."
             fi
         ;;
         stop)

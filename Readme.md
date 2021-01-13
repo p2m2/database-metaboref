@@ -1,11 +1,13 @@
-# Reference Db Metabolomique
+# P2M2 References Databases Metabolomics
 
-## Db
+## Databases
 
- -- Foodb 
- -- FlavonoidsCombinatoire
+| Database | URL |
+| ------ | ----- | 
+| Foodb   | https://foodb.ca/ | 
+| FlavonoidsCombinatoire | - | 
 
-
+## generation 
 
 ```
 ./parser/workflows.sh
