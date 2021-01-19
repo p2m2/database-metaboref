@@ -1,0 +1,42 @@
+version: '3'
+services:
+  virtuoso:
+    image: tenforce/virtuoso:virtuoso7.2.5
+    container_name: virtuoso
+    environment:
+      VIRT_Parameters_NumberOfBuffers: 340000   # See virtuoso/README.md to adapt value of this line
+      VIRT_Parameters_MaxDirtyBuffers: 250000    # See virtuoso/README.md to adapt value of this line
+      VIRT_Parameters_TN_MAX_memory: 4000000000
+      VIRT_SPARQL_ResultSetMaxRows: 100000000
+      VIRT_SPARQL_MaxDataSourceSize: 1000000000
+      VIRT_Flags_TN_MAX_memory: 4000000000
+      VIRT_Parameters_StopCompilerWhenXOverRunTime: 1
+      VIRT_SPARQL_MaxQueryCostEstimationTime: 0       # query time estimation
+      VIRT_SPARQL_MaxQueryExecutionTime: 300          # 5 min
+      VIRT_Parameters_MaxMemPoolSize: 800000000
+      VIRT_Database_LockFile: virtuoso.lck
+      LOGIN_PASSWORD: "dba"
+      DBA_PASSWORD: "dba"
+      SPARQL_UPDATE: "true"
+      DEFAULT_GRAPH: "http://p2m2.metabohub.org/graph"
+    volumes:
+      - ./virtuoso_data:/data
+      - ./metaboref_data:/usr/local/virtuoso-opensource/share/virtuoso/vad/dumps
+    ports:
+      - 8890:8890
+    command: >
+      bash -c '
+      bash /virtuoso.sh &
+      until [ -f "/usr/local/virtuoso-opensource/share/virtuoso/vad/dumps/load_metaboref.sh" ] ; do
+            echo "Waiting Metaboref turtle file - sleeping"
+            sleep 5
+      done &&
+      bash /usr/local/virtuoso-opensource/share/virtuoso/vad/dumps/load_metaboref.sh &&
+      wait'
+
+  metaboref:
+    build : .
+    container_name: metaboref
+    depends_on : [virtuoso]
+    volumes:
+      - ./metaboref_data:/ttl

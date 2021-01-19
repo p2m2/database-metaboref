@@ -1,8 +1,19 @@
 #!/bin/bash
 
-basedir="./dumps"
+if [[ ! -v LOGIN_PASSWORD ]]; then
+    echo "LOGIN_PASSWORD is not set"
+fi
 
-function load_databases() {
+if [[ ! -v DBA_PASSWORD ]]; then
+    echo "LOGIN_PASSWORD is not set"
+fi
+
+LOGIN_DBA=${LOGIN_PASSWORD:dba}
+PASSWORD=${DBA_PASSWORD:dba}
+
+basedir="/usr/local/virtuoso-opensource/share/virtuoso/vad/dumps/"
+
+function load_metaboref() {
 
   if [ ! -d "$basedir" ] ; then
     echo "$basedir does not exist."
@@ -10,7 +21,7 @@ function load_databases() {
     cp $(find ./parser -name "*.ttl") "$basedir/"
   fi
 
-  # here all databse to manage
+  # here all database to manage
   foodb
   FlavonoidsCombinatoire
   newdb
@@ -23,9 +34,7 @@ function foodb() {
   echo " -- Loading $nameg"
   ISQLV_CMD="ld_dir('/usr/local/virtuoso-opensource/share/virtuoso/vad/dumps/', 'foodb*.ttl', 'http://p2m2.metabohub.org/"$nameg"'); rdf_loader_run();"
 
-  docker exec \
-          ${CONTAINER_NAME} \
-          isql-v 1111 dba "${PASSWORD}" exec="${ISQLV_CMD}"
+  isql-v 1111 ${LOGIN_DBA} "${PASSWORD}" exec="${ISQLV_CMD}"
 
   echo " -- Foodb Loaded."
 }
@@ -37,9 +46,7 @@ function FlavonoidsCombinatoire() {
   echo " -- Loading $nameg"
   ISQLV_CMD="ld_dir('/usr/local/virtuoso-opensource/share/virtuoso/vad/dumps/', 'flavonoids_combinatoire.ttl', 'http://p2m2.metabohub.org/"$nameg"'); rdf_loader_run();"
 
-  docker exec \
-          ${CONTAINER_NAME} \
-          isql-v 1111 dba "${PASSWORD}" exec="${ISQLV_CMD}"
+  isql-v 1111 ${LOGIN_DBA} "${PASSWORD}" exec="${ISQLV_CMD}"
 
   echo " -- FlavonoidsCombinatoire Loaded."
 }
@@ -48,3 +55,7 @@ function FlavonoidsCombinatoire() {
 function newdb() {
    echo " -- new db --"
 }
+
+echo " -- Load_MetaboRef $(date) -- "
+
+load_metaboref

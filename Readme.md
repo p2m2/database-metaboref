@@ -7,20 +7,22 @@
 | Foodb   | https://foodb.ca/ | 
 | FlavonoidsCombinatoire | - | 
 
-## Configuration
-
-default value [run.sh](./run.sh#L22)
+## generation
 
 ```bash
-COMPOSE_PROJECT_NAME="P2M2_RCA_Databases"
-LISTEN_PORT="8089"
-PASSWORD="pass123"
-GRAPH="http://p2m2.metabohub.org/"
-```
-
-## generation 
-
-```
 ./parser/workflows.sh
-./run.sh start
+```
+
+## rdf load 
+```bash
+./load_metaboref.sh <tenforce/virtuoso_docker_name>
+```
+
+## Docker usage
+
+```bash
+docker build . -t inraep2m2/metaboref:0.0.X  
+docker push inraep2m2/metaboref:0.0.X
+docker run -v $(pwd)/dumps:/ttl/ -t inraep2m2/metaboref:0.0.X 
+ls ./dumps
 ```
